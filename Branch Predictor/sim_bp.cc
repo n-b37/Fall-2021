@@ -4,17 +4,46 @@
 #include "sim_bp.h"
 #include <math.h> 
 
-/*  argc holds the number of command line arguments
-    argv[] holds the commands themselves
+void counter_operation(int *prediction_table, char outcome, long int index)
+{
+	if(outcome == 't')
+	{
+		if(prediction_table[index]==3)
+		{
+			prediction_table[index]=3;
+		}
+		else
+		{
+			prediction_table[index]++;
+		}
+	}
+	else if(outcome == 'n')
+	{
+		if(prediction_table[index]==0)
+		{
+			prediction_table[index]=0;
+		}
+		else
+		{
+			prediction_table[index]--;
+		}
+	}
+}
 
-    Example:-
-    sim bimodal 6 gcc_trace.txt
-    argc = 4
-    argv[0] = "sim"
-    argv[1] = "bimodal"
-    argv[2] = "6"
-    ... and so on
-*/
+char prediction(int *prediction_table, long int index)
+{
+	char prediction_result;
+	if(prediction_table[index] == 2 || prediction_table[index] == 3)
+	{
+		prediction_result = 't';
+	}
+	else
+	{
+		prediction_result = 'n';
+	}
+	return prediction_result;
+}
+
 int main (int argc, char* argv[])
 {
     FILE *FP;               // File handler
@@ -50,12 +79,6 @@ int main (int argc, char* argv[])
         params.M2       = strtoul(argv[2], NULL, 10);
         trace_file      = argv[3];
         printf("COMMAND\n%s %s %lu %s\n", argv[0], params.bp_name, params.M2, trace_file);
-    
-        
-
-
-
-
     
     }
     else if(strcmp(params.bp_name, "gshare") == 0)          // Gshare
@@ -302,7 +325,7 @@ int main (int argc, char* argv[])
         if(t_n != outcome)
         	{
         		m_pred++;
-			}
+		}
         if((outcome != t_n_b)&&(outcome == t_n_gs)){
 				if(counter_hybrid[idx]==3)
 				{
